@@ -2,8 +2,6 @@
 # coding: utf-8
 
 # In[1]:
-
-
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
@@ -169,9 +167,7 @@ feeds_csv = feeds_csv_raw.loc[feeds_csv_raw['u_userId'].isin(selected_user_id_sa
 
 del ads_csv_raw, feeds_csv_raw
 
-
-# In[18]:
-
+##  FEATURE ENGINEER 
 
 ads_csv['pt_d'] = pd.to_datetime(ads_csv['pt_d'], format='%Y%m%d%H%M')
 # Temporal Features
@@ -225,7 +221,7 @@ for col in ads_csv.filter( regex =  '_diff') .columns :
 # In[21]:
 
 
-ads_csv.head()
+# ads_csv.head()
 
 
 # In[22]:
@@ -246,6 +242,55 @@ ads_csv = ads_csv.select_dtypes(exclude=['object'])
 feeds_csv = feeds_csv.select_dtypes(exclude=['object'])
 
 
+
+#  aggregate statistics
+# Age Distribution
+plt.figure(figsize=(10, 6))
+sns.histplot(ads_csv['age'], bins=20)
+plt.title('Age Distribution')
+plt.xlabel('Age')
+plt.ylabel('Frequency')
+plt.show()
+
+# Gender Distribution
+plt.figure(figsize=(10, 6))
+sns.countplot(x='gender', data=ads_csv)
+plt.title('Gender Distribution')
+plt.xlabel('Gender')
+plt.ylabel('Count')
+plt.show()
+
+# Distribution of Ad Click Counts
+plt.figure(figsize=(10, 6))
+sns.histplot(ads_csv['ad_click_count'], bins=20)
+plt.title('Ad Click Count Distribution')
+plt.xlabel('Ad Click Count')
+plt.ylabel('Frequency')
+plt.show()
+
+# Distribution of Ad Close Counts
+plt.figure(figsize=(10, 6))
+sns.histplot(ads_csv['ad_close_count'], bins=20)
+plt.title('Ad Close Count Distribution')
+plt.xlabel('Ad Close Count')
+plt.ylabel('Frequency')
+plt.show()
+
+# Distribution of Device Series Usage
+plt.figure(figsize=(10, 6))
+sns.countplot(x='series_dev', data=ads_csv)
+plt.title('Device Series Distribution')
+plt.xlabel('Device Series')
+plt.ylabel('Count')
+plt.show()
+
+# Distribution of Engagement Scores
+plt.figure(figsize=(10, 6))
+sns.histplot(merged_csv['feeds_csv'], bins=20)
+plt.title('Engagement Score Distribution')
+plt.xlabel('Engagement Score')
+plt.ylabel('Frequency')
+plt.show()
 
 # In[25]:
 
@@ -450,7 +495,7 @@ voting_clf = VotingClassifier(estimators=[
     ('lr', model4)
 ], voting='soft')
 
-# 训练和评估
+# train and evaluate 
 voting_clf.fit(X_train, y_train)
 y_pred = voting_clf.predict(X_test)
 print(classification_report(y_test, y_pred))
